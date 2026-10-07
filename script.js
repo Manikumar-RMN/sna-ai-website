@@ -31,7 +31,7 @@ function lineBetween(a,b){
 function init(){
   try{
     renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:!mobile,powerPreference:"high-performance"});
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio,mobile?1.25:1.8));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,mobile?1.15:1.65));
     renderer.setSize(window.innerWidth,document.querySelector(".hero").offsetHeight,false);
     scene=new THREE.Scene();
     camera=new THREE.PerspectiveCamera(38,window.innerWidth/document.querySelector(".hero").offsetHeight,.1,100);
@@ -40,15 +40,15 @@ function init(){
     scene.add(group);
 
     const core=new THREE.Mesh(new THREE.IcosahedronGeometry(mobile?.65:.82,2),new THREE.MeshBasicMaterial({color:0x8b7cff,wireframe:true,transparent:true,opacity:.55}));
-    group.add(core);
+    core.scale.setScalar(mobile?.92:1.12); group.add(core);
     const inner=new THREE.Mesh(new THREE.SphereGeometry(mobile?.28:.36,24,24),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.12}));
     group.add(inner);
 
-    const count=mobile?7:11;
+    const count=mobile?6:10;
     const nodes=[];
     for(let i=0;i<count;i++){
       const angle=(i/count)*Math.PI*2;
-      const radius=mobile?1.35:1.65;
+      const radius=mobile?1.45:1.85;
       const y=Math.sin(i*1.7)*(.55);
       const p=new THREE.Vector3(Math.cos(angle)*radius,y,Math.sin(angle)*radius);
       const n=makeNode(p,["AI","CRM","EMAIL","DATA","TEAM","REPORTS","CUSTOMER","DOCS","WORKFLOW","ERP","PORTAL"][i],i);
@@ -94,7 +94,7 @@ function animate(){
   raf=requestAnimationFrame(animate);
   pointer.x+=(pointer.tx-pointer.x)*.035;
   pointer.y+=(pointer.ty-pointer.y)*.035;
-  group.rotation.y+=.0018;
+  group.rotation.y+=mobile?.0012:.0018;
   group.rotation.x=pointer.y*.22;
   group.rotation.y+=pointer.x*.002;
   group.position.y=Math.sin(performance.now()*.00045)*.08;
