@@ -98,6 +98,13 @@ function init(){
       pointer.tx=(e.clientX/innerWidth-.5)*.8;
       pointer.ty=(e.clientY/innerHeight-.5)*.5;
     },{passive:true});
+    canvas.addEventListener("touchmove",e=>{
+      const t=e.touches[0];
+      if(t){
+        pointer.tx=(t.clientX/innerWidth-.5)*1.15;
+        pointer.ty=(t.clientY/innerHeight-.5)*.75;
+      }
+    },{passive:true});
 
     addEventListener("scroll",updateScroll,{passive:true});
     addEventListener("resize",resize);
@@ -135,6 +142,7 @@ function render(t){
   const speed=mobile?.0012:.0018;
 
   system.rotation.y+=speed*(1-scrollProgress*.7);
+  if(mobile) system.rotation.y+=0.0009;
   system.rotation.x=pointer.y*.18-scrollProgress*.16;
   system.rotation.z=pointer.x*.05;
   system.position.y=drift-scrollProgress*.12;
