@@ -194,13 +194,20 @@ export default function App() {
                 <button type="button" onClick={async () => {
                   if (!chat.name.trim() || !chat.email.trim()) return;
                   setSent(false);
+                  const form = new FormData();
+                  form.append("access_key", "YOUR_WEB3FORMS_ACCESS_KEY");
+                  form.append("subject", "New SNA AI enquiry from " + chat.name);
+                  form.append("from_name", "SNA AI Website");
+                  form.append("name", chat.name);
+                  form.append("email", chat.email);
+                  form.append("phone", chat.phone);
+                  form.append("service", chat.service);
+                  form.append("problem", chat.problem);
+                  form.append("botcheck", "");
                   try {
-                    const response = await fetch("/api/contact", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify(chat)
-                    });
-                    if (!response.ok) throw new Error("Unable to send");
+                    const response = await fetch("https://api.web3forms.com/submit", { method: "POST", body: form });
+                    const result = await response.json();
+                    if (!result.success) throw new Error("Unable to send");
                     setSent(true);
                     setChatStep(3);
                   } catch {
@@ -208,7 +215,7 @@ export default function App() {
                   }
                 }} disabled={!chat.name.trim() || !chat.email.trim()} className="rounded-full bg-violet px-5 py-3 font-semibold disabled:opacity-40">Send requirement <ArrowRight className="inline ml-1" size={17} /></button>
               </div>}
-              {chatStep === 3 && <div className="rounded-2xl border border-line bg-ink-2 px-5 py-4 text-sm leading-6">Thanks, {chat.name}. Your requirement has been sent to SNA AI. We’ll review it and get back to you.</div>}
+              {chatStep === 3 && <div className="rounded-2xl border border-line bg-ink-2 px-5 py-4 text-sm leading-6"><strong>Requirement captured ✓</strong><br />Thanks, {chat.name}. We’ve received your requirement and will review it before getting back to you.</div>}
             </div>
           </div>
         </section>
