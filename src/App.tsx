@@ -164,69 +164,24 @@ export default function App() {
 
         <section id="contact" className="mx-auto max-w-3xl px-4 py-16">
           <h2 className="font-display text-3xl font-semibold tracking-tight">Start a conversation</h2>
-          <p className="mt-2 text-muted">Tell us what is taking too much time. Our assistant will ask a few questions and capture the requirement for us.</p>
-          <div className="mt-8 overflow-hidden rounded-card border border-line bg-panel">
-            <div className="border-b border-line px-6 py-5">
-              <p className="font-semibold">SNA AI Assistant</p>
-              <p className="mt-1 text-sm text-muted">A simple guided conversation — no complicated form.</p>
+          <p className="mt-2 text-muted">Tell us about the process, problem or business requirement you would like to improve. We’ll review your requirement and get back to you.</p>
+          <div className="mt-8 rounded-card border border-line bg-panel p-6 sm:p-8">
+            <div className="rounded-2xl bg-ink-2 p-5">
+              <p className="font-semibold">SNA AI – Business Enquiry</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">The enquiry form takes just a few minutes. Your responses will be submitted directly to SNA AI.</p>
             </div>
-            <div className="space-y-5 px-6 py-7">
-              <div className="rounded-2xl bg-ink-2 px-5 py-4 text-sm leading-6">
-                Hi 👋 I’m the SNA AI assistant. What would you like help with?
-              </div>
-              {chatStep === 0 && <div className="grid gap-3 sm:grid-cols-2">
-                {["Automate a repetitive process","Build a custom web application","Connect existing systems","I’m not sure — explain my problem"].map(option => (
-                  <button key={option} type="button" onClick={() => { setChat({ ...chat, service: option }); setChatStep(1); }} className="rounded-2xl border border-line px-5 py-4 text-left text-sm font-medium transition hover:border-violet hover:bg-ink-2">{option}</button>
-                ))}
-              </div>}
-              {chatStep >= 1 && <div className="rounded-2xl bg-violet px-5 py-4 text-sm leading-6">{chat.service}</div>}
-              {chatStep === 1 && <div>
-                <p className="mb-3 text-sm">What problem or process would you like us to improve?</p>
-                <textarea className="w-full rounded-xl border border-line bg-ink-2 px-4 py-3" rows={4} value={chat.problem} onChange={e => setChat({ ...chat, problem: e.target.value })} placeholder="For example: We enter the same customer information in Excel and another system." />
-                <button type="button" onClick={() => setChatStep(2)} disabled={!chat.problem.trim()} className="mt-3 rounded-full bg-violet px-5 py-3 font-semibold disabled:opacity-40">Continue <ArrowRight className="inline ml-1" size={17} /></button>
-              </div>}
-              {chatStep >= 2 && <div className="rounded-2xl bg-ink-2 px-5 py-4 text-sm leading-6">{chat.problem}</div>}
-              {chatStep === 2 && <div className="grid gap-4">
-                <p className="text-sm">What would you ideally like to happen instead?</p>
-                <textarea className="w-full rounded-xl border border-line bg-ink-2 px-4 py-3" rows={3} value={chat.ideal} onChange={e => setChat({ ...chat, ideal: e.target.value })} placeholder="For example: I want the information entered once and automatically shared with the right systems." />
-                <button type="button" onClick={() => setChatStep(3)} disabled={!chat.ideal.trim()} className="rounded-full bg-violet px-5 py-3 font-semibold disabled:opacity-40">Continue <ArrowRight className="inline ml-1" size={17} /></button>
-              </div>}
-              {chatStep >= 3 && <div className="rounded-2xl bg-ink-2 px-5 py-4 text-sm leading-6">{chat.ideal}</div>}
-              {chatStep === 3 && <div className="grid gap-4">
-                <p className="text-sm">Great. How can we contact you?</p>
-                <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="Your name" value={chat.name} onChange={e => setChat({ ...chat, name: e.target.value })} />
-                <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="Email address" type="email" value={chat.email} onChange={e => setChat({ ...chat, email: e.target.value })} />
-                <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="WhatsApp / phone number" value={chat.phone} onChange={e => setChat({ ...chat, phone: e.target.value })} />
-                <button type="button" onClick={async () => {
-                  if (!chat.name.trim() || !chat.email.trim()) return;
-                  setSent(false);
-                  const fields = new URLSearchParams({
-                    "entry.2118170029": chat.name,
-                    "entry.52712309": chat.email,
-                    "entry.1305073619": chat.phone,
-                    "entry.844371349": chat.service === "I'm not sure — explain my problem" ? "I'm not sure — I want to explain my problem" : chat.service,
-                    "entry.363043864": chat.problem,
-                    "entry.1035805322": chat.ideal,
-                  });
-
-                  try {
-                    await fetch("https://docs.google.com/forms/d/e/1FAIpQLScwo_KAKUaTEBMks-QnDEaxPHxmpOxO24b7bjPH7iVj0DWIBw/formResponse", {
-                      method: "POST",
-                      mode: "no-cors",
-                      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-                      body: fields.toString(),
-                    });
-                    setSent(true);
-                    setChatStep(4);
-                  } catch {
-                    setSent(false);
-                  }
-                }} disabled={!chat.name.trim() || !chat.email.trim()} className="rounded-full bg-violet px-5 py-3 font-semibold disabled:opacity-40">Send requirement <ArrowRight className="inline ml-1" size={17} /></button>
-              </div>}
-              {chatStep === 4 && <div className="rounded-2xl border border-line bg-ink-2 px-5 py-4 text-sm leading-6"><strong>Requirement captured ✓</strong><br />Thanks, {chat.name}. We’ve received your requirement and will review it before getting back to you.</div>}
-            </div>
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLScwo_KAKUaTEBMks-QnDEaxPHxmpOxO24b7bjPH7iVj0DWIBw/viewform"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 inline-flex h-12 items-center gap-2 rounded-full bg-violet px-5 font-semibold"
+            >
+              Open business enquiry form <ArrowRight className="size-4" />
+            </a>
+            <p className="mt-4 text-xs text-muted">The form will open in a new tab. Once submitted, your enquiry will be recorded in our SNA AI response sheet.</p>
           </div>
         </section>
+
       </main>
 
       <a href="https://wa.me/918903604189?text=Hi%20SNA%20AI%2C%20I%27d%20like%20to%20discuss%20a%20business%20process." target="_blank" rel="noreferrer" aria-label="Chat with SNA AI on WhatsApp" className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105">
