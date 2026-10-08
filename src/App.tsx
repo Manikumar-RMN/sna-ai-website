@@ -44,6 +44,8 @@ const AFTER = [
 export default function App() {
   const [open, setOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const [chatStep, setChatStep] = useState(0);
+  const [chat, setChat] = useState({ service: "", problem: "", name: "", email: "", phone: "" });
 
   return (
     <div className="min-h-screen bg-ink text-fg">
@@ -160,25 +162,50 @@ export default function App() {
           </div>
         </section>
 
-        <section id="contact" className="mx-auto max-w-xl px-4 py-16">
+        <section id="contact" className="mx-auto max-w-3xl px-4 py-16">
           <h2 className="font-display text-3xl font-semibold tracking-tight">Start a conversation</h2>
-          <p className="mt-2 text-muted">Tell us one process that takes too much time. We’ll reply from snaomkproject@gmail.com or +91 89036 04189.</p>
-          {sent ? <p className="mt-8 rounded-card border border-line bg-panel p-6" role="status">Thanks. Your note is ready — we’ll use the details you entered to follow up.</p> :
-          <form className="mt-8 grid gap-4" onSubmit={event => {
-            event.preventDefault();
-            const data = new FormData(event.currentTarget);
-            const name = String(data.get("name") || ""), email = String(data.get("email") || ""), message = String(data.get("message") || "");
-            window.location.href = `mailto:snaomkproject@gmail.com?subject=${encodeURIComponent("SNA AI enquiry from " + name)}&body=${encodeURIComponent(message + "\n\nFrom: " + name + " <" + email + ">")}`;
-            setSent(true);
-          }}>
-            <label className="grid gap-1 text-sm">Name<input name="name" required className="h-12 rounded-xl border border-line bg-panel px-3" /></label>
-            <label className="grid gap-1 text-sm">Email<input name="email" type="email" required className="h-12 rounded-xl border border-line bg-panel px-3" /></label>
-            <label className="grid gap-1 text-sm">What takes too much time?<textarea name="message" required rows={4} className="rounded-xl border border-line bg-panel px-3 py-3" /></label>
-            <button type="submit" className="h-12 rounded-full bg-violet font-semibold">Send</button>
-          </form>}
+          <p className="mt-2 text-muted">Tell us what is taking too much time. Our assistant will ask a few questions and capture the requirement for us.</p>
+          <div className="mt-8 overflow-hidden rounded-card border border-line bg-panel">
+            <div className="border-b border-line px-6 py-5">
+              <p className="font-semibold">SNA AI Assistant</p>
+              <p className="mt-1 text-sm text-muted">A simple guided conversation — no complicated form.</p>
+            </div>
+            <div className="space-y-5 px-6 py-7">
+              <div className="rounded-2xl bg-ink-2 px-5 py-4 text-sm leading-6">
+                Hi 👋 I’m the SNA AI assistant. What would you like help with?
+              </div>
+              {chatStep === 0 && <div className="grid gap-3 sm:grid-cols-2">
+                {["Automate a repetitive process","Build a custom web application","Connect existing systems","I’m not sure — explain my problem"].map(option => (
+                  <button key={option} type="button" onClick={() => { setChat({ ...chat, service: option }); setChatStep(1); }} className="rounded-2xl border border-line px-5 py-4 text-left text-sm font-medium transition hover:border-violet hover:bg-ink-2">{option}</button>
+                ))}
+              </div>}
+              {chatStep >= 1 && <div className="rounded-2xl bg-violet px-5 py-4 text-sm leading-6">{chat.service}</div>}
+              {chatStep === 1 && <div>
+                <p className="mb-3 text-sm">What problem or process would you like us to improve?</p>
+                <textarea className="w-full rounded-xl border border-line bg-ink-2 px-4 py-3" rows={4} value={chat.problem} onChange={e => setChat({ ...chat, problem: e.target.value })} placeholder="For example: We enter the same customer information in Excel and another system." />
+                <button type="button" onClick={() => setChatStep(2)} disabled={!chat.problem.trim()} className="mt-3 rounded-full bg-violet px-5 py-3 font-semibold disabled:opacity-40">Continue <ArrowRight className="inline ml-1" size={17} /></button>
+              </div>}
+              {chatStep >= 2 && <div className="rounded-2xl bg-ink-2 px-5 py-4 text-sm leading-6">{chat.problem}</div>}
+              {chatStep === 2 && <div className="grid gap-4">
+                <p className="text-sm">Great. How can we contact you?</p>
+                <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="Your name" value={chat.name} onChange={e => setChat({ ...chat, name: e.target.value })} />
+                <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="Email address" type="email" value={chat.email} onChange={e => setChat({ ...chat, email: e.target.value })} />
+                <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="WhatsApp / phone number" value={chat.phone} onChange={e => setChat({ ...chat, phone: e.target.value })} />
+                <button type="button" onClick={() => {
+                  const body = "New SNA AI enquiry\n\nService: " + chat.service + "\nProblem: " + chat.problem + "\nName: " + chat.name + "\nEmail: " + chat.email + "\nPhone / WhatsApp: " + chat.phone;
+                  window.location.href = "mailto:snaomkproject@gmail.com?subject=" + encodeURIComponent("New SNA AI enquiry from " + chat.name) + "&body=" + encodeURIComponent(body);
+                  setSent(true); setChatStep(3);
+                }} disabled={!chat.name.trim() || !chat.email.trim()} className="rounded-full bg-violet px-5 py-3 font-semibold disabled:opacity-40">Send requirement <ArrowRight className="inline ml-1" size={17} /></button>
+              </div>}
+              {chatStep === 3 && <div className="rounded-2xl border border-line bg-ink-2 px-5 py-4 text-sm leading-6">Thanks, {chat.name}. Your requirement is ready to send to SNA AI. If your email app did not open, you can also reach us on WhatsApp using the button below.</div>}
+            </div>
+          </div>
         </section>
       </main>
 
+      <a href="https://wa.me/918903604189?text=Hi%20SNA%20AI%2C%20I%27d%20like%20to%20discuss%20a%20business%20process." target="_blank" rel="noreferrer" aria-label="Chat with SNA AI on WhatsApp" className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105">
+        <MessageSquare size={25} />
+      </a>
       <footer className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
           <span className="font-display text-fg">SNA AI</span><span>Karaikudi · Tamil Nadu · India</span><span>© {new Date().getFullYear()} SNA AI</span>
