@@ -12,6 +12,7 @@ let renderer,scene,camera,system,core,inner,clockStart=performance.now();
 const C={violet:0x8d7cff,blue:0x5d8fff,soft:0xc0b8ff};
 
 function init(){
+  if(!canvas || !visual) return;
   try{
     renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:!mobile,powerPreference:"high-performance"});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio,mobile?1.2:1.7));
