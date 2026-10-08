@@ -204,7 +204,7 @@ export default function App() {
       </main>
 
       <a href="https://wa.me/918903604189?text=Hi%20SNA%20AI%2C%20I%27d%20like%20to%20discuss%20a%20business%20process." target="_blank" rel="noreferrer" aria-label="Chat with SNA AI on WhatsApp" className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105">
-        <span aria-hidden="true" className="text-[27px] font-bold leading-none">◔</span>
+        <svg aria-hidden="true" viewBox="0 0 32 32" className="h-7 w-7 fill-current"><path d="M16 3.2A12.7 12.7 0 0 0 5.2 22.5L3.4 28.8l6.5-1.7A12.7 12.7 0 1 0 16 3.2Zm0 23.1h-.1a10.3 10.3 0 0 1-5.2-1.4l-.4-.2-3.8 1 1-3.7-.2-.4a10.3 10.3 0 1 1 8.7 4.7Zm5.7-7.7c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.8 2.1-1.5.3-.7.3-1.3.2-1.5-.1-.1-.3-.2-.6-.3Z"/></svg>
       </a>
       <footer className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
