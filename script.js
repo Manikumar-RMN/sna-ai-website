@@ -22,23 +22,77 @@ function init(){
     system=new THREE.Group();
     scene.add(system);
 
+    // Premium monochrome SNA AI core: glass cube + luminous inner core + fine edge geometry.
+    const coreSize=mobile?.78:1.02;
+
+    const halo=new THREE.Mesh(
+      new THREE.SphereGeometry(coreSize*1.75,32,32),
+      new THREE.MeshBasicMaterial({
+        color:0xffffff,
+        transparent:true,
+        opacity:mobile?.035:.055,
+        blending:THREE.AdditiveBlending,
+        depthWrite:false
+      })
+    );
+    system.add(halo);
+
+    const glass=new THREE.Mesh(
+      new THREE.BoxGeometry(coreSize,coreSize,coreSize),
+      new THREE.MeshPhysicalMaterial({
+        color:0xffffff,
+        transparent:true,
+        opacity:.075,
+        roughness:.16,
+        metalness:.18,
+        transmission:.25,
+        thickness:.5,
+        side:THREE.DoubleSide
+      })
+    );
+    glass.rotation.set(.18,.38,.08);
+    system.add(glass);
+
+    const edgeBox=new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.BoxGeometry(coreSize*1.02,coreSize*1.02,coreSize*1.02)),
+      new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:.78})
+    );
+    edgeBox.rotation.copy(glass.rotation);
+    system.add(edgeBox);
+
     core=new THREE.Mesh(
-      new THREE.IcosahedronGeometry(mobile?.7:.92,2),
-      new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.8,wireframe:true})
+      new THREE.IcosahedronGeometry(coreSize*.57,2),
+      new THREE.MeshBasicMaterial({
+        color:0xffffff,
+        transparent:true,
+        opacity:.9,
+        wireframe:true
+      })
     );
     system.add(core);
 
-    const coreBox=new THREE.Mesh(
-      new THREE.BoxGeometry(mobile?.66:.88,mobile?.66:.88,mobile?.66:.88),
-      new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.2,wireframe:true})
+    const innerCore=new THREE.Mesh(
+      new THREE.IcosahedronGeometry(coreSize*.42,1),
+      new THREE.MeshBasicMaterial({
+        color:0xffffff,
+        transparent:true,
+        opacity:.13,
+        blending:THREE.AdditiveBlending,
+        depthWrite:false
+      })
     );
-    coreBox.rotation.set(.35,.45,.15);
-    system.add(coreBox);
-    inner=coreBox;
+    system.add(innerCore);
+    inner=innerCore;
 
     const glow=new THREE.Mesh(
-      new THREE.SphereGeometry(mobile?.46:.62,28,28),
-      new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.11})
+      new THREE.SphereGeometry(coreSize*.7,32,32),
+      new THREE.MeshBasicMaterial({
+        color:0xffffff,
+        transparent:true,
+        opacity:.045,
+        blending:THREE.AdditiveBlending,
+        depthWrite:false
+      })
     );
     system.add(glow);
 
@@ -137,8 +191,8 @@ function render(t){
 
   core.rotation.x+=.001;
   core.rotation.z+=.0008;
-  inner.rotation.x-=.00065;
-  inner.rotation.y+=.001;
+  inner.rotation.x-=.001;
+  inner.rotation.y+=.0013;
 
   system.children.forEach(c=>{if(c.userData.speed)c.rotation.z+=c.userData.speed});
 
