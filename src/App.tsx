@@ -45,7 +45,7 @@ export default function App() {
   const [open, setOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const [chatStep, setChatStep] = useState(0);
-  const [chat, setChat] = useState({ service: "", problem: "", name: "", email: "", phone: "" });
+  const [chat, setChat] = useState({ service: "", problem: "", ideal: "", name: "", email: "", phone: "" });
 
   return (
     <div className="min-h-screen bg-ink text-fg">
@@ -187,40 +187,58 @@ export default function App() {
               </div>}
               {chatStep >= 2 && <div className="rounded-2xl bg-ink-2 px-5 py-4 text-sm leading-6">{chat.problem}</div>}
               {chatStep === 2 && <div className="grid gap-4">
+                <p className="text-sm">What would you ideally like to happen instead?</p>
+                <textarea className="w-full rounded-xl border border-line bg-ink-2 px-4 py-3" rows={3} value={chat.ideal} onChange={e => setChat({ ...chat, ideal: e.target.value })} placeholder="For example: I want the information entered once and automatically shared with the right systems." />
+                <button type="button" onClick={() => setChatStep(3)} disabled={!chat.ideal.trim()} className="rounded-full bg-violet px-5 py-3 font-semibold disabled:opacity-40">Continue <ArrowRight className="inline ml-1" size={17} /></button>
+              </div>}
+              {chatStep >= 3 && <div className="rounded-2xl bg-ink-2 px-5 py-4 text-sm leading-6">{chat.ideal}</div>}
+              {chatStep === 3 && <div className="grid gap-4">
                 <p className="text-sm">Great. How can we contact you?</p>
                 <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="Your name" value={chat.name} onChange={e => setChat({ ...chat, name: e.target.value })} />
                 <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="Email address" type="email" value={chat.email} onChange={e => setChat({ ...chat, email: e.target.value })} />
                 <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="WhatsApp / phone number" value={chat.phone} onChange={e => setChat({ ...chat, phone: e.target.value })} />
-                <button type="button" onClick={async () => {
+                <button type="button" onClick={() => {
                   if (!chat.name.trim() || !chat.email.trim()) return;
                   setSent(false);
-                  const form = new FormData();
-                  form.append("access_key", "YOUR_WEB3FORMS_ACCESS_KEY");
-                  form.append("subject", "New SNA AI enquiry from " + chat.name);
-                  form.append("from_name", "SNA AI Website");
-                  form.append("name", chat.name);
-                  form.append("email", chat.email);
-                  form.append("phone", chat.phone);
-                  form.append("service", chat.service);
-                  form.append("problem", chat.problem);
-                  form.append("botcheck", "");
-                  try {
-                    const response = await fetch("https://api.web3forms.com/submit", { method: "POST", body: form });
-                    const result = await response.json();
-                    if (!result.success) throw new Error("Unable to send");
+                  const form = document.createElement("form");
+                  form.method = "POST";
+                  form.action = "https://docs.google.com/forms/d/e/1FAIpQLScwo_KAKUaTEBMks-QnDEaxPHxmpOxO24b7bjPH7iVj0DWIBw/formResponse";
+                  form.target = "sna-ai-google-form";
+                  form.style.display = "none";
+
+                  const fields: Record<string, string> = {
+                    "entry.2118170029": chat.name,
+                    "entry.52712309": chat.email,
+                    "entry.1305073619": chat.phone,
+                    "entry.844371349": chat.service,
+                    "entry.363043864": chat.problem,
+                    "entry.1035805322": chat.ideal,
+                  };
+
+                  Object.entries(fields).forEach(([name, value]) => {
+                    const input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = name;
+                    input.value = value;
+                    form.appendChild(input);
+                  });
+
+                  document.body.appendChild(form);
+                  form.submit();
+                  window.setTimeout(() => {
+                    form.remove();
                     setSent(true);
-                    setChatStep(3);
-                  } catch {
-                    window.open("https://wa.me/918903604189?text=" + encodeURIComponent("Hi SNA AI, my name is " + chat.name + ". Email: " + chat.email + ". I need help with: " + chat.problem), "_blank", "noopener,noreferrer");
-                  }
+                    setChatStep(4);
+                  }, 900);
                 }} disabled={!chat.name.trim() || !chat.email.trim()} className="rounded-full bg-violet px-5 py-3 font-semibold disabled:opacity-40">Send requirement <ArrowRight className="inline ml-1" size={17} /></button>
               </div>}
-              {chatStep === 3 && <div className="rounded-2xl border border-line bg-ink-2 px-5 py-4 text-sm leading-6"><strong>Requirement captured ✓</strong><br />Thanks, {chat.name}. We’ve received your requirement and will review it before getting back to you.</div>}
+              {chatStep === 4 && <div className="rounded-2xl border border-line bg-ink-2 px-5 py-4 text-sm leading-6"><strong>Requirement captured ✓</strong><br />Thanks, {chat.name}. We’ve received your requirement and will review it before getting back to you.</div>}
             </div>
           </div>
         </section>
       </main>
 
+      <iframe title="Google Forms submission target" name="sna-ai-google-form" className="hidden" aria-hidden="true" />
       <a href="https://wa.me/918903604189?text=Hi%20SNA%20AI%2C%20I%27d%20like%20to%20discuss%20a%20business%20process." target="_blank" rel="noreferrer" aria-label="Chat with SNA AI on WhatsApp" className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105">
         <svg aria-hidden="true" viewBox="0 0 32 32" className="h-7 w-7 fill-current"><path d="M16 3.2A12.7 12.7 0 0 0 5.2 22.5L3.4 28.8l6.5-1.7A12.7 12.7 0 1 0 16 3.2Zm0 23.1h-.1a10.3 10.3 0 0 1-5.2-1.4l-.4-.2-3.8 1 1-3.7-.2-.4a10.3 10.3 0 1 1 8.7 4.7Zm5.7-7.7c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.8 2.1-1.5.3-.7.3-1.3.2-1.5-.1-.1-.3-.2-.6-.3Z"/></svg>
       </a>
