@@ -9,7 +9,7 @@ const mobile=window.matchMedia("(max-width:900px)").matches;
 const pointer={x:0,y:0,tx:0,ty:0};
 let renderer,scene,camera,system,core,inner,clockStart=performance.now();
 
-const C={violet:0xffffff,blue:0xffffff,soft:0xffffff};
+const C={violet:0x8d7cff,blue:0x5d8fff,soft:0xc0b8ff};
 
 function init(){
   try{
@@ -22,77 +22,23 @@ function init(){
     system=new THREE.Group();
     scene.add(system);
 
-    // Premium monochrome SNA AI core: glass cube + luminous inner core + fine edge geometry.
-    const coreSize=mobile?.78:1.02;
-
-    const halo=new THREE.Mesh(
-      new THREE.SphereGeometry(coreSize*1.75,32,32),
-      new THREE.MeshBasicMaterial({
-        color:0xffffff,
-        transparent:true,
-        opacity:mobile?.035:.055,
-        blending:THREE.AdditiveBlending,
-        depthWrite:false
-      })
-    );
-    system.add(halo);
-
-    const glass=new THREE.Mesh(
-      new THREE.BoxGeometry(coreSize,coreSize,coreSize),
-      new THREE.MeshPhysicalMaterial({
-        color:0xffffff,
-        transparent:true,
-        opacity:.075,
-        roughness:.16,
-        metalness:.18,
-        transmission:.25,
-        thickness:.5,
-        side:THREE.DoubleSide
-      })
-    );
-    glass.rotation.set(.18,.38,.08);
-    system.add(glass);
-
-    const edgeBox=new THREE.LineSegments(
-      new THREE.EdgesGeometry(new THREE.BoxGeometry(coreSize*1.02,coreSize*1.02,coreSize*1.02)),
-      new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:.78})
-    );
-    edgeBox.rotation.copy(glass.rotation);
-    system.add(edgeBox);
-
     core=new THREE.Mesh(
-      new THREE.IcosahedronGeometry(coreSize*.57,2),
-      new THREE.MeshBasicMaterial({
-        color:0xffffff,
-        transparent:true,
-        opacity:.9,
-        wireframe:true
-      })
+      new THREE.IcosahedronGeometry(mobile?.7:.92,2),
+      new THREE.MeshBasicMaterial({color:C.violet,transparent:true,opacity:.8,wireframe:true})
     );
     system.add(core);
 
-    const innerCore=new THREE.Mesh(
-      new THREE.IcosahedronGeometry(coreSize*.42,1),
-      new THREE.MeshBasicMaterial({
-        color:0xffffff,
-        transparent:true,
-        opacity:.13,
-        blending:THREE.AdditiveBlending,
-        depthWrite:false
-      })
+    const coreBox=new THREE.Mesh(
+      new THREE.BoxGeometry(mobile?.66:.88,mobile?.66:.88,mobile?.66:.88),
+      new THREE.MeshBasicMaterial({color:C.blue,transparent:true,opacity:.2,wireframe:true})
     );
-    system.add(innerCore);
-    inner=innerCore;
+    coreBox.rotation.set(.35,.45,.15);
+    system.add(coreBox);
+    inner=coreBox;
 
     const glow=new THREE.Mesh(
-      new THREE.SphereGeometry(coreSize*.7,32,32),
-      new THREE.MeshBasicMaterial({
-        color:0xffffff,
-        transparent:true,
-        opacity:.045,
-        blending:THREE.AdditiveBlending,
-        depthWrite:false
-      })
+      new THREE.SphereGeometry(mobile?.46:.62,28,28),
+      new THREE.MeshBasicMaterial({color:C.violet,transparent:true,opacity:.11})
     );
     system.add(glow);
 
@@ -149,7 +95,7 @@ function init(){
     for(let i=0;i<data.length;i++)data[i]=(Math.random()-.5)*7;
     particleGeometry.setAttribute("position",new THREE.BufferAttribute(data,3));
     system.add(new THREE.Points(particleGeometry,new THREE.PointsMaterial({
-      color:0xffffff,size:mobile?.018:.024,transparent:true,opacity:.42
+      color:C.violet,size:mobile?.018:.024,transparent:true,opacity:.42
     })));
 
     addEvents();
@@ -191,8 +137,8 @@ function render(t){
 
   core.rotation.x+=.001;
   core.rotation.z+=.0008;
-  inner.rotation.x-=.001;
-  inner.rotation.y+=.0013;
+  inner.rotation.x-=.00065;
+  inner.rotation.y+=.001;
 
   system.children.forEach(c=>{if(c.userData.speed)c.rotation.z+=c.userData.speed});
 
