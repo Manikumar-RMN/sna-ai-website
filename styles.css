@@ -83,3 +83,37 @@ footer{padding:25px 3.4vw;border-top:1px solid var(--line);display:flex;align-it
 .hero-stats{margin-top:5px}.service-cards{border-radius:16px}
 .promise:before{left:0;top:45%;opacity:.55}.contact-card{border-radius:18px}
 }
+
+/* Desktop composition: closely follows the supplied SNA AI reference, rendered in pure monochrome. */
+@media(min-width:901px){
+  .hero{
+    min-height:660px;height:calc(100svh - 72px);
+    grid-template-columns:46% 54%;
+    padding:32px 3.1vw 28px;
+    gap:0;
+  }
+  .hero-copy{max-width:610px;padding:0 0 46px 0}
+  .eyebrow{font-size:8px}
+  .hero h1{font-size:clamp(64px,6vw,86px);line-height:.91;margin:20px 0 22px;max-width:600px}
+  .hero-copy>p{font-size:14px;max-width:475px}
+  .hero-actions{margin-top:25px}
+  .hero-visual{height:560px;min-height:560px;margin-left:-18px}
+  .hero-visual:before{width:360px;height:360px}
+  .visual-heading{left:13%;right:10%;top:2%;font-size:10px}
+  .workflow-side{top:17%;bottom:11%;width:27%}
+  .workflow-side.left{left:0}
+  .workflow-side.right{right:1%}
+  .workflow-node{min-height:49px;padding:8px 11px}
+  .workflow-node b{font-size:10px}
+  .hero-stats{bottom:13px}
+  .hero-stats strong{font-size:19px}
+  .section{padding-top:92px;padding-bottom:92px}
+  .about{padding-top:82px}
+  .process-rail{margin-top:52px}
+  .services{padding-top:88px;padding-bottom:88px}
+  .service-cards{margin-top:45px}
+  .process-section{padding-top:92px;padding-bottom:92px}
+  .workflow-section{padding-top:95px;padding-bottom:95px}
+  .examples{padding-top:92px;padding-bottom:92px}
+  .promise{padding-top:88px;padding-bottom:88px}
+}
