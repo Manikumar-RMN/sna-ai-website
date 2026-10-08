@@ -9,7 +9,7 @@ const mobile=window.matchMedia("(max-width:900px)").matches;
 const pointer={x:0,y:0,tx:0,ty:0};
 let renderer,scene,camera,system,core,inner,clockStart=performance.now();
 
-const C={violet:0x8d7cff,blue:0x5d8fff,soft:0xc0b8ff};
+const C={violet:0xffffff,blue:0xffffff,soft:0xffffff};
 
 function init(){
   try{
@@ -24,13 +24,13 @@ function init(){
 
     core=new THREE.Mesh(
       new THREE.IcosahedronGeometry(mobile?.7:.92,2),
-      new THREE.MeshBasicMaterial({color:C.violet,transparent:true,opacity:.8,wireframe:true})
+      new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.8,wireframe:true})
     );
     system.add(core);
 
     const coreBox=new THREE.Mesh(
       new THREE.BoxGeometry(mobile?.66:.88,mobile?.66:.88,mobile?.66:.88),
-      new THREE.MeshBasicMaterial({color:C.blue,transparent:true,opacity:.2,wireframe:true})
+      new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.2,wireframe:true})
     );
     coreBox.rotation.set(.35,.45,.15);
     system.add(coreBox);
@@ -38,7 +38,7 @@ function init(){
 
     const glow=new THREE.Mesh(
       new THREE.SphereGeometry(mobile?.46:.62,28,28),
-      new THREE.MeshBasicMaterial({color:C.violet,transparent:true,opacity:.11})
+      new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.11})
     );
     system.add(glow);
 
@@ -95,7 +95,7 @@ function init(){
     for(let i=0;i<data.length;i++)data[i]=(Math.random()-.5)*7;
     particleGeometry.setAttribute("position",new THREE.BufferAttribute(data,3));
     system.add(new THREE.Points(particleGeometry,new THREE.PointsMaterial({
-      color:C.violet,size:mobile?.018:.024,transparent:true,opacity:.42
+      color:0xffffff,size:mobile?.018:.024,transparent:true,opacity:.42
     })));
 
     addEvents();
