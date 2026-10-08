@@ -81,11 +81,6 @@ export default function App() {
                 See how it works
               </a>
             </div>
-            <dl className="mt-12 grid grid-cols-3 gap-4 border-t border-line pt-6">
-              <Stat k="10+" v="Years of business operations experience" />
-              <Stat k="200+" v="SaaS implementations and system rollouts" />
-              <Stat k="Businesses" v="Across India and globally" accent />
-            </dl>
           </div>
           <figure className="overflow-hidden rounded-card border border-line bg-ink-2 shadow-[0_0_80px_rgba(124,92,255,0.18)]">
             <img src="/hero-system.svg" alt="A glowing system connecting people, process, tools and data to automation, applications and integration" className="h-auto w-full" />
