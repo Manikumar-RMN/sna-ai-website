@@ -191,13 +191,24 @@ export default function App() {
                 <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="Your name" value={chat.name} onChange={e => setChat({ ...chat, name: e.target.value })} />
                 <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="Email address" type="email" value={chat.email} onChange={e => setChat({ ...chat, email: e.target.value })} />
                 <input className="h-12 rounded-xl border border-line bg-ink-2 px-4" placeholder="WhatsApp / phone number" value={chat.phone} onChange={e => setChat({ ...chat, phone: e.target.value })} />
-                <button type="button" onClick={() => {
-                  const body = "New SNA AI enquiry\n\nService: " + chat.service + "\nProblem: " + chat.problem + "\nName: " + chat.name + "\nEmail: " + chat.email + "\nPhone / WhatsApp: " + chat.phone;
-                  window.location.href = "mailto:snaomkproject@gmail.com?subject=" + encodeURIComponent("New SNA AI enquiry from " + chat.name) + "&body=" + encodeURIComponent(body);
-                  setSent(true); setChatStep(3);
+                <button type="button" onClick={async () => {
+                  if (!chat.name.trim() || !chat.email.trim()) return;
+                  setSent(false);
+                  try {
+                    const response = await fetch("/api/contact", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(chat)
+                    });
+                    if (!response.ok) throw new Error("Unable to send");
+                    setSent(true);
+                    setChatStep(3);
+                  } catch {
+                    window.open("https://wa.me/918903604189?text=" + encodeURIComponent("Hi SNA AI, my name is " + chat.name + ". Email: " + chat.email + ". I need help with: " + chat.problem), "_blank", "noopener,noreferrer");
+                  }
                 }} disabled={!chat.name.trim() || !chat.email.trim()} className="rounded-full bg-violet px-5 py-3 font-semibold disabled:opacity-40">Send requirement <ArrowRight className="inline ml-1" size={17} /></button>
               </div>}
-              {chatStep === 3 && <div className="rounded-2xl border border-line bg-ink-2 px-5 py-4 text-sm leading-6">Thanks, {chat.name}. Your requirement is ready to send to SNA AI. If your email app did not open, you can also reach us on WhatsApp using the button below.</div>}
+              {chatStep === 3 && <div className="rounded-2xl border border-line bg-ink-2 px-5 py-4 text-sm leading-6">Thanks, {chat.name}. Your requirement has been sent to SNA AI. We’ll review it and get back to you.</div>}
             </div>
           </div>
         </section>
